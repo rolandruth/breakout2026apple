@@ -20,8 +20,8 @@ and the file `ios_distribution_private_key.txt` (your signing key, keep it safe 
 
 ## 2. Connect Codemagic (5 min)
 
-1. Open https://codemagic.io/signup and click **Sign up with GitHub**. Allow access to the `breakout2026` repository.
-2. Click **Add application** > **GitHub** > choose `breakout2026` > type **Ionic Capacitor App** (or "Other") > **Finish**.
+1. Open https://codemagic.io/signup and click **Sign up with GitHub**. Allow access to the `breakout2026apple` repository.
+2. Click **Add application** > **GitHub** > choose `breakout2026apple` > type **Ionic Capacitor App** (or "Other") > **Finish**.
    Codemagic finds `codemagic.yaml` by itself.
 3. Add the API key: click **Teams** (left menu) > your team > **Team integrations** > **Developer Portal** > **Connect** / **Manage keys** > **Add key**:
    - **App Store Connect API key name**: `Breakout ASC key` (type it exactly like this)
