@@ -1,0 +1,95 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Mobile / PWA global fixes ───────────────────────────────────────────── */
+html, body {
+  overscroll-behavior: none;
+  min-height: 100dvh;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Safe-area CSS variables for notch/home-bar devices */
+:root {
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left, 0px);
+  --safe-right:  env(safe-area-inset-right, 0px);
+}
+
+/* Global touch/tap optimisations */
+button, [role="button"], a, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@layer base {
+  :root {
+    --background: 230 25% 6%;
+    --foreground: 220 20% 95%;
+    --card: 230 20% 10%;
+    --card-foreground: 220 20% 95%;
+    --popover: 230 20% 10%;
+    --popover-foreground: 220 20% 95%;
+    --primary: 265 90% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 20% 14%;
+    --secondary-foreground: 220 20% 90%;
+    --muted: 230 15% 16%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 180 80% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 80% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 230 15% 18%;
+    --input: 230 15% 18%;
+    --ring: 265 90% 65%;
+    --chart-1: 265 90% 65%;
+    --chart-2: 180 80% 55%;
+    --chart-3: 330 85% 60%;
+    --chart-4: 45 95% 60%;
+    --chart-5: 140 70% 50%;
+    --radius: 0.75rem;
+    --font-orbitron: 'Orbitron', sans-serif;
+    --font-inter: 'Inter', sans-serif;
+  }
+
+  .dark {
+    --background: 230 25% 6%;
+    --foreground: 220 20% 95%;
+    --card: 230 20% 10%;
+    --card-foreground: 220 20% 95%;
+    --popover: 230 20% 10%;
+    --popover-foreground: 220 20% 95%;
+    --primary: 265 90% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 20% 14%;
+    --secondary-foreground: 220 20% 90%;
+    --muted: 230 15% 16%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 180 80% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 80% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 230 15% 18%;
+    --input: 230 15% 18%;
+    --ring: 265 90% 65%;
+    --chart-1: 265 90% 65%;
+    --chart-2: 180 80% 55%;
+    --chart-3: 330 85% 60%;
+    --chart-4: 45 95% 60%;
+    --chart-5: 140 70% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

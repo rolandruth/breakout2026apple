@@ -1,0 +1,23 @@
+{
+  "name": "Score",
+  "type": "object",
+  "properties": {
+    "player_name": {
+      "type": "string",
+      "description": "Player's display name"
+    },
+    "score": {
+      "type": "number",
+      "description": "Final score achieved"
+    },
+    "level": {
+      "type": "number",
+      "description": "Level reached"
+    }
+  },
+  "required": [
+    "player_name",
+    "score",
+    "level"
+  ]
+}

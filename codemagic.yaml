@@ -1,0 +1,63 @@
+# Cloud build for the iPhone app (no Mac needed).
+# Codemagic builds the app on a Mac in the cloud, signs it and uploads it to App Store Connect.
+#
+# One-time setup in Codemagic (see store/IPHONE_BUILD_WITHOUT_MAC.md):
+#   1. Team integrations > Developer Portal: add your App Store Connect API key, name it exactly: Breakout ASC key
+#   2. App > Environment variables: add CERTIFICATE_PRIVATE_KEY (secret) in group: ios_signing
+#
+# Every run gets a new build number automatically, so you never need to change it by hand.
+# For a new app version (1.1, 1.2 ...) change APP_VERSION below.
+
+workflows:
+  ios-app-store:
+    name: iPhone app > App Store Connect
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: Breakout ASC key
+    environment:
+      groups:
+        - ios_signing
+      vars:
+        BUNDLE_ID: com.breakout2026.game
+        APP_VERSION: "1.0"
+        XCODE_PROJECT: ios/App/App.xcodeproj
+        XCODE_SCHEME: App
+      node: 22
+      xcode: latest
+    triggering:
+      events: []   # only runs when you press "Start new build"
+    scripts:
+      - name: Install packages
+        script: npm ci
+      - name: Build the game and copy it into the iPhone project
+        script: |
+          npm run build:mobile
+          npx cap sync ios
+      - name: Get signing certificate and profile from Apple (created automatically the first time)
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --platform IOS \
+            --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
+            --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Set version and build number
+        script: |
+          NEXT=$(( BUILD_NUMBER + 1 ))   # Codemagic counts up by one every run
+          echo "Build number: $NEXT"
+          sed -i '' "s/CURRENT_PROJECT_VERSION = [^;]*;/CURRENT_PROJECT_VERSION = $NEXT;/g; s/MARKETING_VERSION = [^;]*;/MARKETING_VERSION = $APP_VERSION;/g" "$XCODE_PROJECT/project.pbxproj"
+      - name: Build signed .ipa
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false

@@ -1,0 +1,18 @@
+{
+  "appId": "com.breakout2026.game",
+  "appName": "Breakout 2026",
+  "webDir": "dist",
+  "backgroundColor": "#0c0e14",
+  "ios": { "contentInset": "never", "scrollEnabled": false },
+  "plugins": {
+    "CapacitorHttp": { "enabled": true },
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "launchAutoHide": true,
+      "backgroundColor": "#0a0a1a",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    },
+    "StatusBar": { "overlaysWebView": true, "style": "DARK", "backgroundColor": "#00000000" }
+  }
+}
