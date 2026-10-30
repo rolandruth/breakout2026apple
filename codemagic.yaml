@@ -51,14 +51,15 @@ workflows:
           keychain add-certificates
       - name: Apply signing to the Xcode project
         script: |
-          set -e
-          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          ls -la "$PROFILE_DIR"
-          # Pick the App Store profile for our bundle ID
-          for f in "$PROFILE_DIR"/*.mobileprovision; do
-            security cms -D -i "$f" > /tmp/p.plist 2>/dev/null
-            APPID=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/p.plist)
-            if [[ "$APPID" == *".$BUNDLE_ID" ]] && ! /usr/libexec/PlistBuddy -c "Print :ProvisionedDevices" /tmp/p.plist >/dev/null 2>&1; then
+          # Profiles can be in the old or the new (Xcode 16+) folder
+          for f in "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/"*.mobileprovision "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/"*.provisionprofile; do
+            [ -f "$f" ] || continue
+            echo "Checking $f"
+            security cms -D -i "$f" > /tmp/p.plist 2>/dev/null || continue
+            APPID=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/p.plist 2>/dev/null || true)
+            DEVICES=$(/usr/libexec/PlistBuddy -c "Print :ProvisionedDevices" /tmp/p.plist 2>/dev/null || true)
+            echo "  app id: $APPID"
+            if [[ "$APPID" == *".$BUNDLE_ID" ]] && [ -z "$DEVICES" ]; then
               PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" /tmp/p.plist)
               PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" /tmp/p.plist)
               TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" /tmp/p.plist)
